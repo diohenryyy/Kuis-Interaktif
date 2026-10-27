@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kuis Informatika - Berpikir Komputasi</title>
+  <style>
+    :root {
+      --bg: #f3f7ff;
+      --card: #ffffff;
+      --primary: #1d4ed8;
+      --primary-dark: #163ea8;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #dfe7f5;
+      --shadow: 0 12px 28px rgba(29, 78, 216, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #edf3ff, #f8fbff);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 20px;
+    }
+
+    .top-bar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: 18px;
+      padding: 18px 22px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .title {
+      font-size: clamp(1.5rem, 2vw, 2.1rem);
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .timer-box {
+      background: #eef5ff;
+      color: var(--primary-dark);
+      border: 1px solid #cfe0ff;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-weight: 700;
+      min-width: 150px;
+      text-align: center;
+    }
+
+    .identity-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    .identity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 13px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fbfcff;
+      font-size: 1rem;
+    }
+
+    .quiz-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: 18px;
+      padding: 22px 20px;
+      margin-bottom: 18px;
+    }
+
+    .question {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    .question small {
+      display: inline-block;
+      margin-bottom: 10px;
+      color: var(--primary);
+      background: #ebf2ff;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      letter-spacing: 0.03em;
+      font-weight: 700;
+    }
+
+    .option {
+      margin: 10px 0;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fafbff;
+      transition: 0.2s ease;
+      cursor: pointer;
+    }
+
+    .option:hover {
+      background: #eef4ff;
+      border-color: #bfd2ff;
+    }
+
+    .option input {
+      margin-right: 12px;
+      transform: scale(1.1);
+    }
+
+    .option label {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      margin: 0;
+      font-size: 0.98rem;
+      font-weight: 600;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 24px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 7px 18px rgba(29, 78, 216, 0.18);
+      transition: 0.2s ease;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+    }
+
+    .secondary {
+      background: #e5e7eb;
+      color: #1f2937;
+      box-shadow: none;
+    }
+
+    .secondary:hover {
+      background: #d1d5db;
+    }
+
+    #result {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: 18px;
+      padding: 22px 20px;
+      margin-top: 24px;
+    }
+
+    .result-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+    }
+
+    .score-box {
+      font-size: 1.08rem;
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .score {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    @media (max-width: 700px) {
+      .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .timer-box {
+        width: 100%;
+      }
+
+      .quiz-card {
+        padding: 18px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <div class="title">Kuis Informatika</div>
+      <div id="timer" class="timer-box">30:00</div>
+    </div>
+
+    <div class="identity-box">
+      <div class="identity-grid">
+        <div>
+          <label for="nama">Nama Siswa</label>
+          <input type="text" id="nama" placeholder="Masukkan nama lengkap" />
+        </div>
+
+        <div>
+          <label for="kelas">Kelas</label>
+          <input type="text" id="kelas" placeholder="Contoh: X-A" />
+        </div>
+
+        <div>
+          <label for="sekolah">Sekolah</label>
+          <input type="text" id="sekolah" placeholder="Nama sekolah" />
+        </div>
+      </div>
+    </div>
+
+    <div id="quiz"></div>
+
+    <div class="actions">
+      <button id="submitBtn">Selesai & Lihat Hasil</button>
+    </div>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const questions = [
+      { question: "Berpikir komputasi adalah cara berpikir yang menekankan pada...", options: ["Menebak solusi tanpa analisis", "Menggunakan langkah logis seperti komputer untuk memecahkan masalah", "Menghafal semua rumus sekolah", "Menggunakan hanya intuisi dalam setiap keputusan", "Menyelesaikan masalah dengan cepat tanpa proses"], answer: "B", topic: "Berpikir Komputasi" },
+      { question: "Tujuan utama berpikir komputasi adalah...", options: ["Menjadikan semua masalah menjadi angka", "Memecahkan masalah secara sistematis dan efisien", "Membatasi kreativitas siswa", "Menyelesaikan tugas tanpa metode", "Mengurangi penggunaan teknologi"], answer: "B", topic: "Berpikir Komputasi" },
+      { question: "Ciri utama berpikir komputasi adalah...", options: ["Mengabaikan data yang relevan", "Menggunakan pola, struktur, dan algoritma", "Berdasarkan perasaan semata", "Tidak memerlukan penyusunan langkah", "Menyelesaikan masalah tanpa analisis"], answer: "B", topic: "Berpikir Komputasi" },
+      { question: "Dalam konteks informatika, berpikir komputasi membantu seseorang untuk...", options: ["Menulis program tanpa memahami masalah", "Memecahkan masalah dengan pendekatan terstruktur", "Menghindari penggunaan logika", "Menyamakan semua masalah sebagai matematika", "Menyalahi semua langkah kerja"], answer: "B", topic: "Berpikir Komputasi" },
+      { question: "Berpikir komputasi dapat diartikan sebagai proses berpikir yang...", options: ["Acak dan tidak terarah", "Logis, sistematis, dan berbasis data", "Hanya untuk pemrogram profesional", "Terbatas pada ilmu matematika", "Tidak terkait pemecahan masalah"], answer: "B", topic: "Berpikir Komputasi" },
+
+      { question: "Salah satu manfaat belajar berpikir komputasi adalah...", options: ["Membuat manusia menjadi pasif", "Meningkatkan kemampuan memecahkan masalah", "Menghilangkan kebutuhan belajar logika", "Membatasi kemampuan kreatif", "Menurunkan literasi digital"], answer: "B", topic: "Manfaat" },
+      { question: "Dekomposisi dalam berpikir komputasi berarti...", options: ["Menggabungkan semua bagian menjadi satu", "Memecah masalah besar menjadi bagian kecil", "Menyembunyikan masalah agar tidak terlihat", "Menebak solusi secara acak", "Menjalankan proses tanpa perencanaan"], answer: "B", topic: "4 Pilar" },
+      { question: "Contoh penerapan dekomposisi yang tepat adalah...", options: ["Mengerjakan semua tugas sekaligus tanpa rincian", "Membagi tugas membuat laporan menjadi pengumpulan data, penyusunan, dan revisi", "Menghapus seluruh data penting", "Memilih solusi berdasarkan firasat", "Mengabaikan proses kerja"], answer: "B", topic: "4 Pilar" },
+      { question: "Pengenalan pola dalam berpikir komputasi dilakukan dengan cara...", options: ["Menghapus semua data yang tidak relevan", "Mencari keteraturan atau kesamaan dalam data", "Menyusun solusi tanpa melihat masalah", "Mengambil keputusan berdasarkan emosi", "Menyimpan semua informasi dalam satu file"], answer: "B", topic: "4 Pilar" },
+      { question: "Contoh pola yang dapat dikenali dalam data adalah...", options: ["Semua data dianggap acak", "Kejadian yang berulang dengan pola tertentu", "Data yang selalu bertentangan", "Tidak ada hubungan antar data", "Semua angka dibuang"], answer: "B", topic: "4 Pilar" },
+      { question: "Abstraksi dalam berpikir komputasi berarti...", options: ["Menulis program tanpa menganalisis", "Fokus pada hal penting dan mengabaikan detail yang tidak relevan", "Menyederhanakan masalah sampai tidak jelas", "Membuat semua data sama", "Menggunakan semua detail secara berlebihan"], answer: "B", topic: "4 Pilar" },
+      { question: "Contoh abstraksi yang tepat ketika membuat aplikasi adalah...", options: ["Mencatat semua detail kecil tanpa tujuan", "Fokus pada fungsi utama aplikasi, bukan semua detail teknis", "Menghapus seluruh fitur demi kesederhanaan", "Membuat aplikasi tanpa kebutuhan pengguna", "Menyerahkan semua keputusan kepada komputer"], answer: "B", topic: "4 Pilar" },
+      { question: "Algoritma adalah...", options: ["Kumpulan langkah logis untuk menyelesaikan masalah", "Hasil akhir tanpa proses", "Semua data yang dibutuhkan", "Perangkat keras komputer", "Urutan angka acak"], answer: "A", topic: "4 Pilar" },
+      { question: "Urutan yang paling tepat menggambarkan algoritma adalah...", options: ["Mulai → berhenti tanpa proses", "Input → proses → output", "Keputusan acak → hasil acak", "Penyimpanan → penghapusan → nol", "Semua salah"], answer: "B", topic: "4 Pilar" },
+
+      { question: "Dalam kehidupan sehari-hari, berpikir komputasi berguna untuk...", options: ["Mengatur jadwal belajar dengan logis", "Menganggap semua tugas sama", "Menghilangkan kebutuhan perencanaan", "Memilih solusi tanpa analisis", "Menghindari keputusan"], answer: "A", topic: "Penerapan" },
+      { question: "Dalam pemrograman, berpikir komputasi digunakan untuk...", options: ["Menyusun langkah logis sebelum menulis kode", "Menulis kode tanpa memahami kebutuhan", "Mengubah semua kode menjadi angka", "Menghilangkan proses pengujian", "Menyiapkan komputer tanpa analisis"], answer: "A", topic: "Penerapan" },
+      { question: "Dalam pengolahan data, berpikir komputasi membantu...", options: ["Mengidentifikasi pola dari data", "Mengabaikan data penting", "Meningkatkan kekacauan data", "Menurunkan kualitas analisis", "Menghapus kebutuhan logika"], answer: "A", topic: "Penerapan" },
+      { question: "Di bidang kesehatan, berpikir komputasi dapat diterapkan untuk...", options: ["Membuat diagnosis berdasarkan pola data pasien", "Menghapus seluruh rekam medis", "Menebak penyakit tanpa analisis", "Tidak memakai teknologi sama sekali", "Menghindari semua data"], answer: "A", topic: "Penerapan" },
+      { question: "Dalam transportasi, berpikir komputasi dapat membantu menentukan...", options: ["Rute perjalanan terbaik berdasarkan data lalu lintas", "Semua rute secara acak", "Keputusan tanpa melihat kondisi", "Jadwal tanpa analisis data", "Transportasi yang tidak perlu direncanakan"], answer: "A", topic: "Penerapan" },
+      { question: "Dalam dunia bisnis, berpikir komputasi berguna untuk...", options: ["Menganalisis data penjualan dan kebutuhan pelanggan", "Membuat keputusan tanpa data", "Mengurangi kebutuhan evaluasi", "Menghapus semua laporan", "Menyembunyikan informasi penting"], answer: "A", topic: "Penerapan" },
+      { question: "Dalam pembelajaran berbasis proyek, berpikir komputasi membantu siswa untuk...", options: ["Membagi tugas dan merancang langkah kerja", "Mengerjakan semuanya sendiri tanpa kolaborasi", "Mengabaikan jadwal", "Tidak perlu menyusun rencana", "Menolak kreativitas"], answer: "A", topic: "Penerapan" },
+
+      { question: "Karakteristik utama berpikir komputasi adalah...", options: ["Logis, sistematis, dan efisien", "Acak, tidak terukur, dan spontan", "Tidak memerlukan analisis", "Bersifat subyektif", "Berdasarkan tebak-tebakan"], answer: "A", topic: "Karakteristik" },
+      { question: "Berpikir komputasi bersifat analitis artinya...", options: ["Menyelesaikan masalah dengan berdasarkan data dan fakta", "Menebak hasil tanpa alasan", "Mengabaikan semua informasi", "Hanya mengikuti kehendak orang lain", "Mengambil keputusan secara acak"], answer: "A", topic: "Karakteristik" },
+      { question: "Salah satu karakteristik berpikir komputasi adalah objektif, yang berarti...", options: ["Berdasarkan fakta dan data, bukan perasaan semata", "Berdasarkan pendapat mayoritas tanpa bukti", "Berasal dari emosi pribadi", "Tanpa memerlukan validasi", "Mengikuti semua ide tanpa evaluasi"], answer: "A", topic: "Karakteristik" },
+      { question: "Dalam berpikir komputasi, evaluasi solusi bertujuan untuk...", options: ["Menilai apakah solusi tersebut efektif dan tepat", "Menyembunyikan kekurangan solusi", "Memastikan tidak ada proses sama sekali", "Menghapus semua tahapan", "Mengalihkan masalah ke orang lain"], answer: "A", topic: "Karakteristik" },
+      { question: "Karakteristik efisien dalam berpikir komputasi berarti...", options: ["Menggunakan waktu dan sumber daya secara optimal", "Membuat banyak langkah yang tidak perlu", "Menunda semua keputusan", "Menghindari semua metode", "Mengurangi kebutuhan analisis"], answer: "A", topic: "Karakteristik" },
+
+      { question: "Peran berpikir komputasi dalam informatika adalah...", options: ["Menjadi dasar dalam memecahkan masalah secara terstruktur", "Menghentikan semua proses pemrograman", "Mengurangi kebutuhan belajar komputer", "Mengubah semua masalah menjadi angka tanpa analisis", "Membuat teknologi tidak berguna"], answer: "A", topic: "Peran" },
+      { question: "Dalam teknologi, berpikir komputasi berperan penting dalam...", options: ["Perancangan sistem, perangkat lunak, dan analisis data", "Menulis tanpa tujuan", "Menghapus kebutuhan perangkat keras", "Menyederhanakan semua sistem secara otomatis tanpa pengujian", "Tidak ada kaitannya dengan teknologi"], answer: "A", topic: "Peran" },
+      { question: "Peran berpikir komputasi dalam pengembangan aplikasi adalah...", options: ["Membantu merancang fungsi dan alur kerja aplikasi", "Membuat aplikasi tanpa memahami kebutuhan pengguna", "Menghilangkan kebutuhan uji coba", "Menyederhanakan semua keputusan menjadi satu langkah", "Menghapus semua kebutuhan dokumentasi"], answer: "A", topic: "Peran" },
+      { question: "Berpikir komputasi berperan besar dalam kecerdasan buatan karena...", options: ["Membantu model belajar dari pola data", "Menghilangkan kebutuhan data", "Menolak semua logika", "Mencegah komputer bekerja", "Menyalahkan semua keputusan manusia"], answer: "A", topic: "Peran" },
+      { question: "Dalam pendidikan, peran berpikir komputasi adalah...", options: ["Mendorong siswa menjadi pemecah masalah yang kritis", "Mengurangi kemampuan berpikir kritis", "Menyebabkan siswa pasif", "Membatasi kreativitas siswa", "Tidak relevan dalam pembelajaran"], answer: "A", topic: "Peran" },
+      { question: "Salah satu peran berpikir komputasi dalam kehidupan modern adalah...", options: ["Menunjang pengambilan keputusan berdasarkan data dan pola", "Menggantikan semua proses manusia sepenuhnya", "Menghindari penggunaan teknologi", "Menuju keputusan yang tidak terukur", "Menghapus kerja sama antar manusia"], answer: "A", topic: "Peran" },
+
+      { question: "Berpikir komputasi sangat berguna saat seseorang menyusun rencana kegiatan karena...", options: ["Membantu membagi kegiatan menjadi langkah-langkah yang logis", "Menyebabkan semua kegiatan dilakukan tanpa urutan", "Menghilangkan kebutuhan evaluasi", "Membuat perencanaan acak", "Tidak perlu melihat sumber daya"], answer: "A", topic: "Penerapan" },
+      { question: "Jika seseorang menemukan masalah yang kompleks, cara berpikir komputasi yang tepat adalah...", options: ["Memecah masalah menjadi bagian kecil lalu menganalisisnya satu per satu", "Langsung memilih solusi tanpa studi", "Mengabaikan langkah-langkah penting", "Menyerah sebelum mencoba", "Membuat masalah semakin besar"], answer: "A", topic: "Berpikir Komputasi" },
+      { question: "Manfaat utama berpikir komputasi dalam pembelajaran adalah...", options: ["Memudahkan siswa memahami masalah dan mencari solusi", "Menyulitkan proses belajar", "Mengurangi kreativitas siswa", "Membuat siswa malas membaca", "Menurunkan kemampuan analisis"], answer: "A", topic: "Manfaat" },
+      { question: "Berpikir komputasi dalam dunia kerja bermanfaat karena...", options: ["Membantu menyusun strategi kerja yang efisien", "Menggantikan semua manusia", "Membuat pekerjaan tidak perlu dibagi", "Menyebabkan keputusan menjadi otomatis tanpa evaluasi", "Mengurangi kebutuhan komunikasi"], answer: "A", topic: "Manfaat" },
+      { question: "Contoh penerapan berpikir komputasi yang tepat dalam sehari-hari adalah...", options: ["Menyusun jadwal belajar dengan urutan prioritas yang jelas", "Mengerjakan semua tugas tanpa perencanaan", "Membiarkan semua tugas menumpuk", "Menyusun keputusan berdasarkan tebakan", "Mengabaikan target belajar"], answer: "A", topic: "Penerapan" },
+      { question: "Ketika menghadapi banyak data, berpikir komputasi membantu dengan cara...", options: ["Mengelompokkan data, menilai pola, dan memilih informasi relevan", "Membiarkan data menumpuk tanpa pengelolaan", "Menghapus semua data yang tampak penting", "Menyimpan semua data tanpa analisis", "Tidak memerlukan pemilahan"], answer: "A", topic: "Penerapan" },
+      { question: "Kesimpulan yang paling tepat tentang berpikir komputasi adalah...", options: ["Berpikir komputasi adalah keterampilan yang berguna untuk semua orang dalam memecahkan masalah", "Berpikir komputasi hanya penting untuk programmer profesional", "Berpikir komputasi tidak relevan dalam kehidupan sehari-hari", "Berpikir komputasi hanya berkaitan dengan angka", "Berpikir komputasi tidak perlu dipelajari"], answer: "A", topic: "Kesimpulan" }
+    ];
+
+    const quizContainer = document.getElementById("quiz");
+    const resultBox = document.getElementById("result");
+    const timerEl = document.getElementById("timer");
+    const submitBtn = document.getElementById("submitBtn");
+
+    const totalSeconds = 30 * 60; // 30 menit
+    let timeLeft = totalSeconds;
+    let timerId = null;
+    let resultSubmitted = false;
+
+    function renderQuiz() {
+      questions.forEach((q, index) => {
+        const card = document.createElement("div");
+        card.className = "quiz-card";
+
+        const questionText = document.createElement("div");
+        questionText.className = "question";
+        questionText.innerHTML = `
+          <small>${q.topic}</small><br>
+          ${index + 1}. ${q.question}
+        `;
+
+        const optionsWrap = document.createElement("div");
+
+        q.options.forEach((option, i) => {
+          const optionId = `q${index}_${i}`;
+          const wrap = document.createElement("div");
+          wrap.className = "option";
+
+          const label = document.createElement("label");
+          label.setAttribute("for", optionId);
+
+          const input = document.createElement("input");
+          input.type = "radio";
+          input.name = `q${index}`;
+          input.id = optionId;
+          input.value = String.fromCharCode(65 + i);
+
+          const span = document.createElement("span");
+          span.textContent = `${String.fromCharCode(65 + i)}. ${option}`;
+
+          label.appendChild(input);
+          label.appendChild(span);
+          wrap.appendChild(label);
+          optionsWrap.appendChild(wrap);
+        });
+
+        card.appendChild(questionText);
+        card.appendChild(optionsWrap);
+        quizContainer.appendChild(card);
+      });
+    }
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    }
+
+    function startTimer() {
+      timerId = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;
+          timerEl.textContent = formatTime(timeLeft);
+        } else {
+          clearInterval(timerId);
+          finishQuiz(true);
+        }
+      }, 1000);
+    }
+
+    function getAnswers() {
+      const answers = {};
+      questions.forEach((_, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        answers[index] = selected ? selected.value : null;
+      });
+      return answers;
+    }
+
+    function finishQuiz(autoSubmit = false) {
+      if (resultSubmitted) return;
+
+      resultSubmitted = true;
+      clearInterval(timerId);
+
+      const answers = getAnswers();
+      let score = 0;
+
+      questions.forEach((q, index) => {
+        if (answers[index] === q.answer) score++;
+      });
+
+      const nama = document.getElementById("nama").value.trim() || "Tidak diisi";
+      const kelas = document.getElementById("kelas").value.trim() || "Tidak diisi";
+      const sekolah = document.getElementById("sekolah").value.trim() || "Tidak diisi";
+      const percentage = Math.round((score / questions.length) * 100);
+      const waktuTerpakai = totalSeconds - timeLeft;
+      const waktuTerpakaiStr = formatTime(waktuTerpakai);
+
+      let predicate = "";
+      if (percentage >= 85) predicate = "Sangat baik";
+      else if (percentage >= 70) predicate = "Baik";
+      else if (percentage >= 50) predicate = "Cukup";
+      else predicate = "Perlu ditingkatkan";
+
+      const resultMessage = `
+Nama: ${nama}
+Kelas: ${kelas}
+Sekolah: ${sekolah}
+
+Hasil Kuis Informatika
+Skor: ${score}/${questions.length}
+Persentase: ${percentage}%
+Predikat: ${predicate}
+Waktu pengerjaan: ${waktuTerpakaiStr}
+Status: ${autoSubmit ? "Waktu habis" : "Selesai"}
+      `.trim();
+
+      resultBox.style.display = "block";
+      resultBox.innerHTML = `
+        <div class="result-title">Hasil Kuis Informatika</div>
+        <div class="score-box">
+          <div>Nama: <strong>${nama}</strong></div>
+          <div>Kelas: <strong>${kelas}</strong></div>
+          <div>Sekolah: <strong>${sekolah}</strong></div>
+          <div>Skor: <span class="score">${score}/${questions.length}</span></div>
+          <div>Persentase: <strong>${percentage}%</strong></div>
+          <div>Predikat: <strong>${predicate}</strong></div>
+          <div>Waktu pengerjaan: <strong>${waktuTerpakaiStr}</strong></div>
+          <div class="muted">${autoSubmit ? "Waktu kuis habis, jawaban otomatis dikumpulkan." : "Kuis selesai."}</div>
+        </div>
+        <div class="actions">
+          <button id="waBtn">Kirim Hasil ke WhatsApp Guru</button>
+          <button id="ulangBtn" class="secondary">Ulang Kuis</button>
+        </div>
+      `;
+
+      document.getElementById("waBtn").addEventListener("click", () => {
+        const nomorGuru = "6287863539155";
+        const text = encodeURIComponent(resultMessage);
+        window.open(`https://wa.me/${nomorGuru}?text=${text}`, "_blank");
+      });
+
+      document.getElementById("ulangBtn").addEventListener("click", () => {
+        location.reload();
+      });
+
+      // scroll ke hasil
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    submitBtn.addEventListener("click", () => {
+      const answers = getAnswers();
+      const unanswered = Object.values(answers).filter(v => v === null).length;
+
+      if (unanswered > 0) {
+        alert(`Masih ada ${unanswered} soal yang belum dijawab. Silakan jawab semua soal terlebih dahulu.`);
+        return;
+      }
+
+      finishQuiz(false);
+    });
+
+    renderQuiz();
+    startTimer();
+  </script>
+</body>
+</html>
